@@ -20,6 +20,15 @@ namespace UserApi.Application.Validations
             RuleFor(user => user.Email)
                     .NotEmpty().WithMessage("Email address is required.")
                     .EmailAddress().WithMessage("A valid email address is required.");
+            RuleFor(user => user.FirstName)
+                .NotEmpty().WithMessage("First name is required.")
+                .Length(2, 100).WithMessage("First name must be between 2 and 100 characters.");
+            RuleFor(user => user.LastName)
+                  .NotEmpty().WithMessage("Last name is required.")
+                  .Length(2, 100).WithMessage("Last name must be between 2 and 100 characters.");
+            RuleFor(user => user.DateOfBirth)
+                .NotEmpty().WithMessage("Date of birth is required.")
+                .LessThan(DateTime.Now).WithMessage("Date of birth must be in the past.");
         }
     }
 }

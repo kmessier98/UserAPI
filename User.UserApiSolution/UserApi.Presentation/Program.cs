@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using UserApi.Application.DTOs;
 using UserApi.Application.Validations;
+using UserApi.Domain.Entities;
 using UserApi.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,9 +14,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
 // S'assurer que le package Microsoft.AspNetCore.Identity.UI est installé
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     {
-        options.SignIn.RequireConfirmedAccount = true;
+        options.SignIn.RequireConfirmedAccount = false;
     })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
@@ -24,6 +25,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IValidator<UserRegisterDTO>, UserRegisterValidator>();
+builder.Services.AddScoped<IValidator<UserLoginDTO>, UserLoginValidator>();
 
 var app = builder.Build();
 
