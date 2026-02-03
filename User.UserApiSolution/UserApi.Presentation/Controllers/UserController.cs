@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using UserApi.Application.DTOs;
+using UserApi.Application.Extensions;
 
 namespace UserApi.Presentation.Controllers
 {
@@ -10,10 +11,23 @@ namespace UserApi.Presentation.Controllers
     {
         private readonly IValidator<UserRegisterDTO> _userRegisterValidator;
 
-        [HttpPost("Register")]
-        public async Task<ActionResult> Register() 
+        public UserController(IValidator<UserRegisterDTO> validator)
         {
-            // Registration logic here
+            _userRegisterValidator = validator;
+        }
+
+        [HttpPost("Register")]
+        public async Task<ActionResult> Register([FromBody] UserRegisterDTO user) 
+        {
+            var validationResult = await _userRegisterValidator.ValidateAsync(user);
+            if (!validationResult.IsValid)
+            {
+                //return UnprocessableEntity(validationResult.errors);
+                validationResult.AddToModelState(ModelState);
+                return UnprocessableEntity(ModelState);
+            }
+
+
             return Ok("User registered successfully.");
         }
     }

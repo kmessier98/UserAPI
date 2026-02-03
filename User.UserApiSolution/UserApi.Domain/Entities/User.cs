@@ -1,6 +1,6 @@
 ﻿namespace UserApi.Domain.Entities
 {
-    public class UserRegister
+    public class User
     {
         public int Id { get; set; }
         public string Username { get; set; }
