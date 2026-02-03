@@ -38,6 +38,10 @@ namespace UserApi.Presentation.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
+            var existingUser = await _userManager.FindByEmailAsync(user.Email);
+            if (existingUser != null)
+                return Unauthorized("Email is already in use.");
+
             var identityUser = new ApplicationUser
             {
                 UserName = user.Username,
@@ -67,7 +71,16 @@ namespace UserApi.Presentation.Controllers
                 isPersistent: user.RememberMe,
                 lockoutOnFailure: true);
 
+            //TODOOO devrait retourner un token au client!!
             return result.Succeeded ? Ok("User logged in successfully.") : Unauthorized("Invalid credentials");
+        }
+
+        [HttpPost("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            //TODO require gestion de cookie/token lors du login pour que ca marche bien
+            await _signInManager.SignOutAsync();
+            return Ok("User logged out succesfully");
         }
     }
     
