@@ -1,0 +1,12 @@
+<ul>
+    @if (isAuthenticated$ | async) {
+    <li><a routerLink="/">Home</a></li>
+    }
+    @if (isAuthenticated$ | async) {
+    <li><a routerLink="#" (click)="logout()">Logout</a></li>
+    }
+    @else {
+    <li><a routerLink="/auth">Login / Register</a></li>
+    }
+
+</ul>
