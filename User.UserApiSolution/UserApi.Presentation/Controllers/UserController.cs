@@ -39,6 +39,10 @@ namespace UserApi.Presentation.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
+            var existingUser = await _userManager.FindByEmailAsync(user.Email);
+            if (existingUser != null)
+                return Unauthorized("Email is already in use.");
+
             var identityUser = new ApplicationUser
             {
                 UserName = user.Username,
